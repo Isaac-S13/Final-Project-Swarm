@@ -72,7 +72,3 @@ The app will open at `http://localhost:8501`.
 - `final_project_db` is created automatically on first run. If you ever change the embedding provider or model, delete this folder and let it regenerate — ChromaDB locks in the embedding function used at creation time and will throw a conflict error otherwise.
 - Uploaded PDF/TXT files are chunked and stored in ChromaDB so agents can reference them during a run.
 - This project has no error handling by design — it's meant to fail loudly during development rather than silently.
-
-## License
-
-Add your license here.
