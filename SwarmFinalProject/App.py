@@ -36,7 +36,9 @@ def file_to_base64(path):
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-
+BLOCK_BLUEPRINT_B64 = file_to_base64("fonts/BlockBlueprint.ttf")
+KA1_B64 = file_to_base64("fonts/ka1.ttf")
+COURIER_NEW_BOLD_B64 = file_to_base64("fonts/Courier New Bold.ttf")
 DIDOT_B64 = file_to_base64("fonts/Didot.otf")
 DIDOT_BOLD_B64 = file_to_base64("fonts/Didot Bold.otf")
 DIDOT_ITALIC_B64 = file_to_base64("fonts/Didot Italic.otf")
@@ -60,7 +62,7 @@ if "messages" not in st.session_state:
 if "thinking" not in st.session_state:
     st.session_state.thinking = False
 
-COLORS = {"green": "#2ecc71", "orange": "#e67e22"}
+COLORS = {"green": "#FFFFFF", "orange": "#e67e22"}
 
 # -----------------------------------------------
 # STYLE
@@ -87,6 +89,16 @@ st.markdown(
 @font-face {{
     font-family: 'Didot Title';
     src: url(data:font/otf;base64,{DIDOT_TITLE_B64}) format('opentype');
+}}
+@font-face {{
+    font-family: 'Courier New Bold';
+    src: url(data:font/ttf;base64,{COURIER_NEW_BOLD_B64}) format('truetype');
+    font-weight: bold;
+}}
+@font-face {{
+    font-family: 'KA1';
+    src: url(data:font/ttf;base64,{KA1_B64}) format('truetype');
+    font-weight: normal;
 }}
 
 html, body, [class*="css"], input, textarea, button, p, div, span, h1, h2, h3, h4, h5 {{
@@ -117,16 +129,16 @@ h1, h2, h3, h4 {{
 /* ---------- SWARM CANVAS ---------- */
 
 .node {{
-    border: 2.5px solid;
+    border: 3px solid;
     border-radius: 14px;
-    padding: 12px 14px;
+    padding: 10px 18px;
     text-align: center;
     font-weight: bold;
     font-size: 15px;
-    background-color: rgba(0, 0, 242, 0.6);
+    background-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     margin: 0 auto;
-    width: 120px;
+    width: 150px;
     letter-spacing: 1px;
     transition: all 0.35s ease;
 }}
@@ -306,43 +318,6 @@ button {{
 )
 
 # -----------------------------------------------
-# SIDEBAR — DIAGRAM
-# -----------------------------------------------
-
-
-def node(label, key):
-    status = st.session_state.status[key]
-    color = COLORS[status]
-    return f'<div class="node" style="border-color:{color}; color:{color};">{label}</div>'
-
-
-def render_diagram():
-    return f"""
-    <h4 style='text-align:center;'>SWARM CANVAS</h4>
-    <div style="text-align:center; padding-bottom:14px;">
-        {node("Planner", "planner")}
-        <div class="line">|<br>|</div>
-        <div class="line">┌──┴──┐</div>
-        <div class="line">▼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</div>
-        <div class="row">
-            {node("Research", "research")}
-            {node("Coding", "coding")}
-        </div>
-        <div class="line">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</div>
-        <div class="line">└──┬──┘</div>
-        <div class="line">▼</div>
-        {node("Review", "review")}
-    </div>
-    """
-
-
-with st.sidebar:
-    diagram_placeholder = st.empty()
-    diagram_placeholder.markdown(render_diagram(), unsafe_allow_html=True)
-
-    complete_placeholder = st.empty()
-
-# -----------------------------------------------
 # MAIN — HEADER & CHAT
 # -----------------------------------------------
 
@@ -396,6 +371,65 @@ with st.form("ask_form", clear_on_submit=True, border=False):
 
     with send_col:
         submitted = st.form_submit_button("➤")
+
+# -----------------------------------------------
+# SWARM CANVAS — UNDER ASK BAR
+# -----------------------------------------------
+
+def node(label, key):
+    status = st.session_state.status[key]
+    color = COLORS[status]
+    return f'<div class="node" style="border-color:{color}; color:{color};">{label}</div>'
+
+def render_diagram():
+    planner_color = COLORS[st.session_state.status["planner"]]
+    research_color = COLORS[st.session_state.status["research"]]
+    coding_color = COLORS[st.session_state.status["coding"]]
+    review_color = COLORS[st.session_state.status["review"]]
+
+    return f"""
+    <div style="
+        text-align:center;
+        margin-top:20px;
+        font-family:'KA1', sans-serif;
+        font-size:25px;
+        letter-spacing:2px;
+    ">
+        <span style="color:{planner_color};">PLANNER</span>
+        <span style="color:#FFFFFF;"> • </span>
+        <span style="color:{research_color};">RESEARCH</span>
+        <span style="color:#FFFFFF;"> • </span>
+        <span style="color:{coding_color};">CODING</span>
+        <span style="color:#FFFFFF;"> • </span>
+        <span style="color:{review_color};">REVIEW</span>
+    </div>
+    """
+diagram_placeholder = st.empty()
+
+diagram_placeholder.markdown(
+    render_diagram(),
+    unsafe_allow_html=True
+)
+
+agents_placeholder = st.empty()
+
+agents_placeholder.markdown(
+    """
+    <div style="
+        text-align:center;
+        margin-top:8px;
+        font-family:'KA1', sans-serif;
+        font-size:20px;
+        letter-spacing:3px;
+        color:#FFFFFF;
+    ">
+        -AGENTS-
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+complete_placeholder = st.empty()
 
     #uploaded_file = st.file_uploader(
     #    "Attach", type=["pdf", "txt"], label_visibility="collapsed"

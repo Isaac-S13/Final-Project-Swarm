@@ -31,7 +31,7 @@ Your job is to write code, not plan, research, or test.
 
 def run_coder(task):
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-5.6",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": task}

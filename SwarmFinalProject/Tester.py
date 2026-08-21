@@ -34,7 +34,7 @@ Your job is quality assurance, not writing the entire project yourself.
 
 def run_tester(task):
     response = client.chat.completions.create(
-        model="gpt-5.6-sol",
+        model="gpt-5.6",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": task}
