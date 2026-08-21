@@ -31,7 +31,7 @@ your job is to investigate and provide useful information to the other agents.
 
 def run_researcher(task):
     response = client.chat.completions.create(
-        model="gpt-5.6",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": task}

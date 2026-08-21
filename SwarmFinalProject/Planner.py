@@ -24,7 +24,7 @@ If the user asks you to perform another agent's job, explain that your role is t
 
 def run_planner(task):
     response = client.chat.completions.create(
-        model="gpt-5.6",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": task}
